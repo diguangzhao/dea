@@ -1,1 +1,8 @@
-Controller.php
+<?php
+
+namespace Dea\CGI;
+
+class Controller {
+
+	
+}

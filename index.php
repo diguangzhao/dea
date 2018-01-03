@@ -1,6 +1,6 @@
 <?php
 
-define('SYSTEM_PATH', dirname(__FILE__));
+define('ROOT_PATH', dirname(__FILE__));
 
-require SYSTEM_PATH . '/system/lib/cgi.php';
+require ROOT_PATH . '/system/lib/cgi.php';
 

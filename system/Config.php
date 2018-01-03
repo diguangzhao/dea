@@ -4,43 +4,43 @@
  * @Author: diguangzhao
  * @Date:   2017-12-27 23:36:30
  * @Last Modified by:   diguangzhao
- * @Last Modified time: 2017-12-27 23:50:13
+ * @Last Modified time: 2017-12-31 22:41:20
  * @功能: 配置信息处理类，
  * @描述: 读取ROOT_PATH/<filename>.php 中 
- *	$config[<config>]变量内容，赋给 self::$config[<filename>][<config>]
+ *    $config[<config>]变量内容，赋给 self::$config[<filename>][<config>]
  */
 namespace Dea;
 
 class Config {
 
-	public static $items;
+    public static $items;
 
-	public static function setup() {
-		self::clear();
-		self::$items = self::fetch();
-	}
+    public static function setup() {
+        self::clear();
+        self::$items = self::fetch();
+    }
 
-	public static function get(string $key, $default = null) {
-		list($file, $name) = explode('.', $key, 2);
+    public static function get(string $key, $default = null) {
+        list($file, $name) = explode('.', $key, 2);
 
-		if ($name == null) {
-			return isset(self::$items[$file]) ? self::$items[$file] : $default;
-		}
-		return isset(self::$items[$file][$name]) ? self::$items[$file][$name] : $default;
-	}
+        if ($name == null) {
+            return isset(self::$items[$file]) ? self::$items[$file] : $default;
+        }
+        return isset(self::$items[$file][$name]) ? self::$items[$file][$name] : $default;
+    }
 
-	public static function set(string $key, $value) {
-		list($file, $name) = explode('.', $key, 2);
+    public static function set(string $key, $value) {
+        list($file, $name) = explode('.', $key, 2);
 
-		if ($name === null) {
-			self::$items[$file] = $value;
-		} else {
-			self::$items[$file][$name] = $value;
-		}
-	}
+        if ($name === null) {
+            self::$items[$file] = $value;
+        } else {
+            self::$items[$file][$name] = $value;
+        }
+    }
 
-	public static function append(string $key, $value) {
-		list($file, $name) = explode('.', $key, 2);
+    public static function append(string $key, $value) {
+        list($file, $name) = explode('.', $key, 2);
 
         if (self::$items[$file][$name] === null) {
             self::$items[$file][$name] = $value;
@@ -49,14 +49,14 @@ class Config {
         } else {
             self::$items[$file][$name] .= $value;
         }
-	}
+    }
 
-	static function clear() {
-		self::$items = [];
-	}
+    static function clear() {
+        self::$items = [];
+    }
 
-	static function fetch() {
-		if (!is_dir(CONFIG_PATH)) {
+    static function fetch() {
+        if (!is_dir(CONFIG_PATH)) {
             return;
         }
 
@@ -78,15 +78,15 @@ class Config {
                 }
 
                 switch (pathinfo($name, PATHINFO_EXTENSION)) {
-	                case 'php':
-	                    $config = &self::$items[$category];
-	                    call_user_func(function () use (&$config, $file) {
-	                        include $file;
-	                    });
-	                    break;
+                    case 'php':
+                        $config = &self::$items[$category];
+                        call_user_func(function () use (&$config, $file) {
+                            include $file;
+                        });
+                        break;
                 }
             }
             closedir($dh);
         }
-	}
+    }
 }
