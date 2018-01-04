@@ -2,13 +2,15 @@
 
 namespace Dea\App\Controller;
 
-class Hello extends \Dea\Controller\CGI {
+class Hello extends \Dea\Controller\CGI\Base {
 
-    static function setup() {
-        var_dump('hello');
+    public function __index($params = null) {
+    	var_dump('__index');
+    	return 123;
     }
 
     public function actionA() {
-    	var_dump(func_get_args());
+    	return V('test');
+
     }
 }

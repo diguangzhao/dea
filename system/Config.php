@@ -4,7 +4,7 @@
  * @Author: diguangzhao
  * @Date:   2017-12-27 23:36:30
  * @Last Modified by:   diguangzhao
- * @Last Modified time: 2017-12-31 22:41:20
+ * @Last Modified time: 2018-01-05 00:39:21
  * @功能: 配置信息处理类，
  * @描述: 读取ROOT_PATH/<filename>.php 中 
  *    $config[<config>]变量内容，赋给 self::$config[<filename>][<config>]
@@ -17,7 +17,11 @@ class Config {
 
     public static function setup() {
         self::clear();
-        self::$items = self::fetch();
+        self::fetch();
+    }
+
+    public static function export() {
+        return self::$items;
     }
 
     public static function get(string $key, $default = null) {
@@ -86,7 +90,7 @@ class Config {
                         break;
                 }
             }
-            closedir($dh);
         }
+        return $config;
     }
 }

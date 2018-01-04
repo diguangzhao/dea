@@ -5,7 +5,7 @@ namespace Dea;
 class View {
     
     protected $_path;
-    protected $_vars
+    protected $_vars;
 
     public function __construct($path, $vars = null) {
         $this->_path = $path;
@@ -40,31 +40,21 @@ class View {
         }
 
         $path = $this->_path;
-        $locale = \Gini\Config::get('system.locale');
-        $localeSpecificPath = "@$locale/$path";
+        $view = \Dea\Config::get('system.view');
 
-        $engines = \Gini\Config::get('view.engines');
-        if (isset($GLOBALS['gini.view_map'][$localeSpecificPath])) {
-            $realPath = $GLOBALS['gini.view_map'][$localeSpecificPath];
-            $engine = $engines[pathinfo($realPath, PATHINFO_EXTENSION)];
-        } elseif (isset($GLOBALS['gini.view_map'][$path])) {
-            $realPath = $GLOBALS['gini.view_map'][$path];
-            $engine = $engines[pathinfo($realPath, PATHINFO_EXTENSION)];
-        } else {
-            foreach ($engines as $ext => $engine) {
-                $realPath = \Gini\Core::locatePharFile(VIEW_DIR, "$localeSpecificPath.$ext");
-                if (!$realPath) {
-                    $realPath = \Gini\Core::locatePharFile(VIEW_DIR, "$path.$ext");
-                }
-                if ($realPath) {
-                    break;
-                }
+        $engines = $view['engines'];
+
+        foreach ($engines as $ext => $engine) {
+            $basepath = $engine['path'] ? : VIEW_PATH;
+            $realPath = "$basepath/$path.$ext";
+            if (file_exists($realPath)) {
+                break;
             }
         }
 
         if ($engine && $realPath) {
-            $class = '\Gini\View\\'.$engine;
-            $output = \Gini\IoC::construct($class, $realPath, $this->_vars);
+            $class = '\Dea\View\\'.$engine['engine'];
+            $output = \Dea\IoC::construct($class, $realPath, $this->_vars ?: []);
         }
 
         return $this->_ob_cache = (string) $output;

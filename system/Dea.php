@@ -96,4 +96,13 @@ namespace {
         }
     }
 
+    if (function_exists('V')) {
+        die('V() was declared by other libraries!');
+    } else {
+        function V(string $path, $args = null)
+        {
+            return \Dea\IOC::construct('\Dea\View', $path, $args);
+        }
+    }
+
 }
